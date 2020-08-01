@@ -457,7 +457,8 @@ public class Main extends Application {
 						monthlyReportTable(stage, Integer.parseInt(m.getText()),Integer.parseInt(y.getText()));
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						System.out.println("Please enter all inputs with valid integer numbers");
+						//e1.printStackTrace();
 					}
                 } 
             };
@@ -537,16 +538,16 @@ public class Main extends Application {
     	//add labels of minimum, maximum and average
     	//Label min = new Label("Minimun: " + 10);
     	//Label min = new Label("Minimun: " + dataStorage.get("Farm 42").getMonthWeight(2, 2019));
-    	Label max = new Label("Maximum: " + 30);
+    	//Label max = new Label("Maximum: " + 30);
     	Label avg = new Label("Average: " + average);
     	
     	//root.getChildren().add(min);
-    	root.getChildren().add(max);
+    	//root.getChildren().add(max);
     	root.getChildren().add(avg);
     	
     	//min.relocate(30, 50);
-    	max.relocate(30, 10);
-    	avg.relocate(30, 90);
+    	//max.relocate(30, 10);
+    	avg.relocate(30, 30);
     	//add buttons to the root
     	Button back = new Button("Back");
     	root.getChildren().add(back);
@@ -620,7 +621,7 @@ public class Main extends Application {
                 public void handle(ActionEvent e) 
                 { 
                      try {
-						annualReportTable(stage);
+						annualReportTable(stage, Integer.parseInt(y.getText()));
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -658,26 +659,31 @@ public class Main extends Application {
 	 * @param stage  the stage of the program
 	 * @throws Exception when exception occurs
 	 */
-	public void annualReportTable (Stage stage) {
+	public void annualReportTable (Stage stage, int year) {
 		TableView table = new TableView();
 		table.setEditable(true);
 		 
-        TableColumn<String, Farm> monthColumn = new TableColumn<>("Farm ID");
-        monthColumn.setCellValueFactory(new PropertyValueFactory<>("month"));
+        TableColumn<String, Data> monthColumn = new TableColumn<>("Farm ID");
+        monthColumn.setCellValueFactory(new PropertyValueFactory<>("farmID"));
         
-        TableColumn<String, Farm> weightColumn = new TableColumn<>("Weight");
-        weightColumn.setCellValueFactory(new PropertyValueFactory<>("weight"));
+        TableColumn<String, Data> weightColumn = new TableColumn<>("Weight");
+        weightColumn.setCellValueFactory(new PropertyValueFactory<>("yearWeight"));
         
-        TableColumn<String, Farm> percentageColumn = new TableColumn<>("Percentage");
+        TableColumn<String, Data> percentageColumn = new TableColumn<>("Percentage");
         percentageColumn.setCellValueFactory(new PropertyValueFactory<>("percentage"));
         
         table.getColumns().add(monthColumn);
         table.getColumns().add(weightColumn);
         table.getColumns().add(percentageColumn);
+        int i = 0;
+        for(Entry<String, Farm> entry: dataStorage.dataStorage.entrySet()) {
+        	table.getItems().add(new Data(((Entry<String, Farm>) entry).getValue().getYearWeight(year),
+        					((Entry<String, Farm>) entry).getKey(),
+        			(double)((Entry<String, Farm>) entry).getValue().getYearWeight( year)/dataStorage.getTotalYearWeight(year)));
+        	i++;
+        }
+        double average = (double)dataStorage.getTotalYearWeight(year)/i;
         
-        table.getItems().add(new Farm("01", 20, 0.2));
-        table.getItems().add(new Farm("02", 30, 0.3));
-        table.getItems().add(new Farm("03", 10, 0.1));
         VBox vbox = new VBox(table);
         
     	Pane root = new Pane();
@@ -685,17 +691,17 @@ public class Main extends Application {
     	vbox.relocate(350, 0);
     	
     	//add labels of minimum, maximum and average
-    	Label min = new Label("Minimun: " + 10);
-    	Label max = new Label("Maximum: " + 30);
-    	Label avg = new Label("Average: " + 20);
+    	//Label min = new Label("Minimun: " + 10);
+    	//Label max = new Label("Maximum: " + 30);
+    	Label avg = new Label("Average: " + average);
     	
-    	root.getChildren().add(min);
-    	root.getChildren().add(max);
+    	//root.getChildren().add(min);
+    	//root.getChildren().add(max);
     	root.getChildren().add(avg);
     	
-    	min.relocate(30, 50);
-    	max.relocate(30, 10);
-    	avg.relocate(30, 90);
+    	//min.relocate(30, 50);
+    	//max.relocate(30, 10);
+    	avg.relocate(30, 30);
     	//add buttons to the root
     	Button back = new Button("Back");
     	root.getChildren().add(back);

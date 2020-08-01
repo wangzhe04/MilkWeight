@@ -41,6 +41,14 @@ public class DataStorage {
 		return totalWeight;
 	}
 	
+	public int getTotalYearWeight(int year) {
+		int totalWeight = 0;
+		for(Entry<String, Farm> entry: dataStorage.entrySet()) {
+			totalWeight += entry.getValue().getYearWeight(year);
+		}
+		return totalWeight;
+	}
+	
 	public void addFile( DataStorage b) {
 		for(Entry<String, Farm> entry: b.dataStorage.entrySet()) {
 			 insert(((Entry<String, Farm>) entry).getKey(), ((Entry<String, Farm>) entry).getValue());
