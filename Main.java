@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -249,6 +250,9 @@ public class Main extends Application {
 							root.getChildren().add(noInput);
 							noInput.relocate(215, 300);
 						}else {
+							if(!dataStorage.contains(ID.getText())) {
+								System.out.println("Missing File");
+							}
 							FarmTable(stage, ID.getText(), Integer.parseInt(y.getText()));
 						}
 					} catch (Exception e1) {
@@ -450,7 +454,7 @@ public class Main extends Application {
                 public void handle(ActionEvent e) 
                 { 
                      try {
-						monthlyReportTable(stage);
+						monthlyReportTable(stage, Integer.parseInt(m.getText()),Integer.parseInt(y.getText()));
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -488,30 +492,42 @@ public class Main extends Application {
 	 * @param stage  the stage of the program
 	 * @throws Exception when exception occurs
 	 */
-	public void monthlyReportTable (Stage stage) {
+	public void monthlyReportTable (Stage stage, int month, int year) {
 		TableView table = new TableView();
 		table.setEditable(true);
 		 
-        TableColumn<String, Farm> monthColumn = new TableColumn<>("Farm ID");
-        monthColumn.setCellValueFactory(new PropertyValueFactory<>("month"));
+        TableColumn<String, Data> monthColumn = new TableColumn<>("Farm ID");
+        monthColumn.setCellValueFactory(new PropertyValueFactory<>("farmID"));
         
-        TableColumn<String, Farm> weightColumn = new TableColumn<>("Weight");
-        weightColumn.setCellValueFactory(new PropertyValueFactory<>("weight"));
+        TableColumn<String, Data> weightColumn = new TableColumn<>("Weight");
+        weightColumn.setCellValueFactory(new PropertyValueFactory<>("monthWeight"));
         
-        TableColumn<String, Farm> percentageColumn = new TableColumn<>("Percentage");
+        TableColumn<String, Data> percentageColumn = new TableColumn<>("Percentage");
         percentageColumn.setCellValueFactory(new PropertyValueFactory<>("percentage"));
         
         table.getColumns().add(monthColumn);
         table.getColumns().add(weightColumn);
         table.getColumns().add(percentageColumn);
+        int i = 0;
+        for(Entry<String, Farm> entry: dataStorage.dataStorage.entrySet()) {
+        	table.getItems().add(new Data(((Entry<String, Farm>) entry).getKey(),
+        			((Entry<String, Farm>) entry).getValue().getMonthWeight(month, year),
+        			(double)((Entry<String, Farm>) entry).getValue().getMonthWeight(month, year)/dataStorage.getTotalMonthWeight(month, year)));
+        	i++;
+        }
+        
+        double average = (double)dataStorage.getTotalMonthWeight(month, year)/i;
+        
+        //table.getItems().add(new Data("42", 20, 0.3));
         
         //Iterator it = dataStorage.entrySet().iterator();
         
-        table.getItems().add(new Farm("01", 20, 0.2));
+        //table.getItems().add(new Farm("01", 20, 0.2));
+        //dataStorage.get("Farm 42").monthWeight = dataStorage.get("Farm 42").getMonthWeight(2, 2019);
        
-        table.getItems().add(dataStorage.get("Farm 42"));
-        table.getItems().add(new Farm("02", 30, 0.3));
-        table.getItems().add(new Farm("03", 10, 0.1));
+       // table.getItems().add(dataStorage.get("Farm 42"));
+        //table.getItems().add(new Farm("02", 30, 0.3));
+        //table.getItems().add(new Farm("03", 10, 0.1));
         VBox vbox = new VBox(table);
         
     	Pane root = new Pane();
@@ -520,15 +536,15 @@ public class Main extends Application {
     	
     	//add labels of minimum, maximum and average
     	//Label min = new Label("Minimun: " + 10);
-    	Label min = new Label("Minimun: " + dataStorage.get("Farm 42").getMonthWeight(2, 2019));
+    	//Label min = new Label("Minimun: " + dataStorage.get("Farm 42").getMonthWeight(2, 2019));
     	Label max = new Label("Maximum: " + 30);
-    	Label avg = new Label("Average: " + 20);
+    	Label avg = new Label("Average: " + average);
     	
-    	root.getChildren().add(min);
+    	//root.getChildren().add(min);
     	root.getChildren().add(max);
     	root.getChildren().add(avg);
     	
-    	min.relocate(30, 50);
+    	//min.relocate(30, 50);
     	max.relocate(30, 10);
     	avg.relocate(30, 90);
     	//add buttons to the root

@@ -21,6 +21,7 @@ public class Farm {
     private String[] dateArray;
     private int [] milkWeight;
     private int index = 0;
+    public int monthWeight = 12;
     int size;
     String farmID;
     
