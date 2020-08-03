@@ -16,8 +16,9 @@ import javafx.stage.Stage;
 public class FileManager {
 	public Stage primaryStage;
 	DataStorage a;
-	public FileManager(File file, DataStorage a) throws IOException {
-		try {
+	public FileManager(File file, DataStorage a) throws IOException, NumberFormatException {
+		//try {
+			//this.a = a;
 		//a = new DataStorage();
 		String line = "";
 		BufferedReader br = new BufferedReader(new FileReader(file));
@@ -34,10 +35,14 @@ public class FileManager {
 			}
 			//System.out.println(array[0]);
 		}
-		}catch(Exception e) {
-			//a = new DataStorage();
-			System.out.println("Invalid File Input");
-		}
+		//}catch(NumberFormatException e1) {
+			
+		//}catch(Exception e) {
+			//e.printStackTrace();
+			//a = this.a;
+			
+			//System.out.println("Invalid File Input");
+		
 	}
 	
 	/*public void addFile( File file) {

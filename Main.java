@@ -55,6 +55,7 @@ public class Main extends Application {
 	private static final String Months[] = {"Jan", "Mar", "Apr", "May", "June","July", 
 			"Aug", "Sep", "Oct", "Nov", "Dec"};
 	private static DataStorage dataStorage = new DataStorage();
+	DataStorage dataStorage1 = new DataStorage();
 
 
 	@Override
@@ -250,7 +251,7 @@ public class Main extends Application {
 							root.getChildren().add(noInput);
 							noInput.relocate(215, 300);
 						}else {
-							if(!dataStorage.contains(ID.getText())) {
+							if(!dataStorage.contains("Farm " +ID.getText())) {
 								System.out.println("Missing File");
 							}
 							FarmTable(stage, ID.getText(), Integer.parseInt(y.getText()));
@@ -457,7 +458,10 @@ public class Main extends Application {
 						monthlyReportTable(stage, Integer.parseInt(m.getText()),Integer.parseInt(y.getText()));
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
-						System.out.println("Please enter all inputs with valid integer numbers");
+						Label a = new Label("Please enter all inputs as integers");
+						root.getChildren().add(a);
+						a.relocate(220, 295);
+						//System.out.println("Please enter all inputs with valid integer numbers");
 						//e1.printStackTrace();
 					}
                 } 
@@ -509,12 +513,21 @@ public class Main extends Application {
         table.getColumns().add(monthColumn);
         table.getColumns().add(weightColumn);
         table.getColumns().add(percentageColumn);
+        
         int i = 0;
+        int max = 0;
+        int min = Integer.MAX_VALUE;
         for(Entry<String, Farm> entry: dataStorage.dataStorage.entrySet()) {
         	table.getItems().add(new Data(((Entry<String, Farm>) entry).getKey(),
         			((Entry<String, Farm>) entry).getValue().getMonthWeight(month, year),
         			(double)((Entry<String, Farm>) entry).getValue().getMonthWeight(month, year)/dataStorage.getTotalMonthWeight(month, year)));
         	i++;
+        	if(((Entry<String, Farm>) entry).getValue().getMonthWeight(month, year) > max) {
+        		max = ((Entry<String, Farm>) entry).getValue().getMonthWeight(month, year);
+        	}
+        	if(((Entry<String, Farm>) entry).getValue().getMonthWeight(month, year) < min) {
+        		min = ((Entry<String, Farm>) entry).getValue().getMonthWeight(month, year);
+        	}
         }
         
         double average = (double)dataStorage.getTotalMonthWeight(month, year)/i;
@@ -536,18 +549,18 @@ public class Main extends Application {
     	vbox.relocate(350, 0);
     	
     	//add labels of minimum, maximum and average
-    	//Label min = new Label("Minimun: " + 10);
+    	Label mini = new Label("Minimun: " + min);
     	//Label min = new Label("Minimun: " + dataStorage.get("Farm 42").getMonthWeight(2, 2019));
-    	//Label max = new Label("Maximum: " + 30);
-    	Label avg = new Label("Average: " + average);
+    	Label maxi= new Label("Maximum: " + max);
+    	Label avg = new Label("Average: " + average +"\n\n click titles to sort(ascending/descending)");
     	
-    	//root.getChildren().add(min);
-    	//root.getChildren().add(max);
+    	root.getChildren().add(mini);
+    	root.getChildren().add(maxi);
     	root.getChildren().add(avg);
     	
-    	//min.relocate(30, 50);
-    	//max.relocate(30, 10);
-    	avg.relocate(30, 30);
+    	mini.relocate(30, 50);
+    	maxi.relocate(30, 10);
+    	avg.relocate(30, 90);
     	//add buttons to the root
     	Button back = new Button("Back");
     	root.getChildren().add(back);
@@ -568,7 +581,7 @@ public class Main extends Application {
     	
 		// Add the stuff and set the primary stage
         Scene mainScene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
-    	stage.setTitle(APP_TITLE);
+    	stage.setTitle("Monthly Report");
     	stage.setScene(mainScene);
     	stage.show();
 	}
@@ -624,7 +637,10 @@ public class Main extends Application {
 						annualReportTable(stage, Integer.parseInt(y.getText()));
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						Label a = new Label("Please enter all inputs as integers");
+						root.getChildren().add(a);
+						a.relocate(220, 295);
+						//System.out.println("Please enter all inputs as integers");
 					}
                 } 
             };
@@ -675,12 +691,20 @@ public class Main extends Application {
         table.getColumns().add(monthColumn);
         table.getColumns().add(weightColumn);
         table.getColumns().add(percentageColumn);
+        int max = 0;
+        int min = Integer.MAX_VALUE;
         int i = 0;
         for(Entry<String, Farm> entry: dataStorage.dataStorage.entrySet()) {
         	table.getItems().add(new Data(((Entry<String, Farm>) entry).getValue().getYearWeight(year),
         					((Entry<String, Farm>) entry).getKey(),
         			(double)((Entry<String, Farm>) entry).getValue().getYearWeight( year)/dataStorage.getTotalYearWeight(year)));
         	i++;
+        	if(((Entry<String, Farm>) entry).getValue().getYearWeight(year) > max) {
+        		max = ((Entry<String, Farm>) entry).getValue().getYearWeight(year);
+        	}
+        	if(((Entry<String, Farm>) entry).getValue().getYearWeight(year) < min) {
+        		min = ((Entry<String, Farm>) entry).getValue().getYearWeight(year);
+        	}
         }
         double average = (double)dataStorage.getTotalYearWeight(year)/i;
         
@@ -691,17 +715,17 @@ public class Main extends Application {
     	vbox.relocate(350, 0);
     	
     	//add labels of minimum, maximum and average
-    	//Label min = new Label("Minimun: " + 10);
-    	//Label max = new Label("Maximum: " + 30);
-    	Label avg = new Label("Average: " + average);
+    	Label mini = new Label("Minimun: " + min);
+    	Label maxi = new Label("Maximum: " + max);
+    	Label avg = new Label("Average: " + average+"\n\n click titles to sort(ascending/descending)");
     	
-    	//root.getChildren().add(min);
-    	//root.getChildren().add(max);
+    	root.getChildren().add(mini);
+    	root.getChildren().add(maxi);
     	root.getChildren().add(avg);
     	
-    	//min.relocate(30, 50);
-    	//max.relocate(30, 10);
-    	avg.relocate(30, 30);
+    	mini.relocate(30, 50);
+    	maxi.relocate(30, 10);
+    	avg.relocate(30, 90);
     	//add buttons to the root
     	Button back = new Button("Back");
     	root.getChildren().add(back);
@@ -722,7 +746,7 @@ public class Main extends Application {
     	
 		// Add the stuff and set the primary stage
         Scene mainScene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
-    	stage.setTitle(APP_TITLE);
+    	stage.setTitle("Annual Report");
     	stage.setScene(mainScene);
     	stage.show();
 	}
@@ -751,11 +775,14 @@ public class Main extends Application {
         	// add the labels to the root
         	Label farmID = new Label("Please Enter Start Date: ");
         	Label year = new Label("Please Enter End Date: ");
+        	Label format = new Label("Date Format: year-month-date, eg. 2019-2-15");
         	
         	root.getChildren().add(farmID);
         	root.getChildren().add(year);
+        	root.getChildren().add(format);
         	farmID.relocate(175, 180);
         	year.relocate(180, 220);
+        	format.relocate(200, 250);
         	
         	//add Text fields to the root
         	TextField ID = new TextField();
@@ -778,7 +805,7 @@ public class Main extends Application {
                 public void handle(ActionEvent e) 
                 { 
                      try {
-                    	 dateTable(stage);
+                    	 dateTable(stage, ID.getText(), y.getText());
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -815,26 +842,40 @@ public class Main extends Application {
 	 * @param stage  the stage of the program
 	 * @throws Exception when exception occurs
 	 */
-	public void dateTable(Stage stage) throws Exception {
+	public void dateTable(Stage stage, String startD, String endD) throws Exception {
 		TableView table = new TableView();
 		table.setEditable(true);
 		 
-        TableColumn<String, Farm> monthColumn = new TableColumn<>("Farm ID");
-        monthColumn.setCellValueFactory(new PropertyValueFactory<>("month"));
+        TableColumn<String, Data> monthColumn = new TableColumn<>("Farm ID");
+        monthColumn.setCellValueFactory(new PropertyValueFactory<>("farmID"));
         
-        TableColumn<String, Farm> weightColumn = new TableColumn<>("Weight");
+        TableColumn<String, Data> weightColumn = new TableColumn<>("Weight");
         weightColumn.setCellValueFactory(new PropertyValueFactory<>("weight"));
         
-        TableColumn<String, Farm> percentageColumn = new TableColumn<>("Percentage");
+        TableColumn<String, Data> percentageColumn = new TableColumn<>("Percentage");
         percentageColumn.setCellValueFactory(new PropertyValueFactory<>("percentage"));
         
         table.getColumns().add(monthColumn);
         table.getColumns().add(weightColumn);
         table.getColumns().add(percentageColumn);
         
-        table.getItems().add(new Farm("01", 20, 0.2));
-        table.getItems().add(new Farm("02", 30, 0.3));
-        table.getItems().add(new Farm("03", 10, 0.1));
+        int max = 0;
+        int min = Integer.MAX_VALUE;
+        int i = 0;
+        for(Entry<String, Farm> entry: dataStorage.dataStorage.entrySet()) {
+        	table.getItems().add(new Data(((Entry<String, Farm>) entry).getValue().getDaysWeight(startD, endD),
+        			(double)((Entry<String, Farm>) entry).getValue().getDaysWeight(startD, endD)/dataStorage.getTotalDaysWeight(startD, endD),
+        			((Entry<String, Farm>) entry).getKey()));
+        	i++;
+        	if(((Entry<String, Farm>) entry).getValue().getDaysWeight(startD, endD) > max) {
+        		max = ((Entry<String, Farm>) entry).getValue().getDaysWeight(startD, endD);
+        	}
+        	if(((Entry<String, Farm>) entry).getValue().getDaysWeight(startD, endD) < min) {
+        		min = ((Entry<String, Farm>) entry).getValue().getDaysWeight(startD, endD);
+        	}
+        }
+        double average = (double)dataStorage.getTotalDaysWeight(startD, endD)/i;
+        
         VBox vbox = new VBox(table);
         
     	Pane root = new Pane();
@@ -842,16 +883,16 @@ public class Main extends Application {
     	vbox.relocate(350, 0);
     	
     	//add labels of minimum, maximum and average
-    	Label min = new Label("Minimun: " + 10);
-    	Label max = new Label("Maximum: " + 30);
-    	Label avg = new Label("Average: " + 20);
+    	Label mini = new Label("Minimun: " + min);
+    	Label maxi = new Label("Maximum: " + max);
+    	Label avg = new Label("Average: " + average +"\n\n click titles to sort(ascending/descending)");
     	
-    	root.getChildren().add(min);
-    	root.getChildren().add(max);
+    	root.getChildren().add(mini);
+    	root.getChildren().add(maxi);
     	root.getChildren().add(avg);
     	
-    	min.relocate(30, 50);
-    	max.relocate(30, 10);
+    	mini.relocate(30, 50);
+    	maxi.relocate(30, 10);
     	avg.relocate(30, 90);
     	//add buttons to the root
     	Button back = new Button("Back");
@@ -862,7 +903,7 @@ public class Main extends Application {
             public void handle(ActionEvent e) 
             { 
                  try {
-					annualReport(stage);
+					selectDateReport(stage);
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -916,12 +957,13 @@ public class Main extends Application {
         	Button back = new Button("Back");
         	root.getChildren().add(back);
         	back.relocate(0, 350);
+        	 
         	// Add File
         	EventHandler<ActionEvent> addFileEvent = new EventHandler<ActionEvent>() { 
                 public void handle(ActionEvent e) 
                 { 
                      try {
-                    	 DataStorage dataStorage1 = new DataStorage();
+                    	
                     	 dataStorage1 = dataStorage;
                     	 File file = fileChooser.showOpenDialog(null);
                     	 if(file != null) {
@@ -930,9 +972,23 @@ public class Main extends Application {
                     		//dataStorage.addFile(dataStorage1);
                     	 }
 						edit(stage);
+					} catch ( NumberFormatException e1) {
+						Label error = new Label("Invalid Characters or missing information, "
+								+ "DataStorage had been restored");
+						root.getChildren().add(error);
+						error.relocate(120, 250);
+						dataStorage = new DataStorage();
+						// TODO Auto-generated catch block
+						//e1.printStackTrace();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						Label error = new Label("Invalid Characters");
+						root.getChildren().add(error);
+						error.relocate(250, 250);
+						e1.printStackTrace();
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						//e1.printStackTrace();
 					}
                 } 
             };
@@ -1021,6 +1077,22 @@ public class Main extends Application {
         	Button back = new Button("Back");
         	root.getChildren().add(back);
         	back.relocate(0, 350);
+        	
+        	EventHandler<ActionEvent> addEvent = new EventHandler<ActionEvent>() { 
+                public void handle(ActionEvent e) 
+                { 
+                     try {
+						dataStorage.insert(fileN.getText(), new Farm());
+						Label added = new Label("successfully added");
+						root.getChildren().add(added);
+						added.relocate(280, 300);
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+                } 
+            };
+            con.setOnAction(addEvent);
         	//back event
         	EventHandler<ActionEvent> startEvent = new EventHandler<ActionEvent>() { 
                 public void handle(ActionEvent e) 
@@ -1059,27 +1131,86 @@ public class Main extends Application {
         	
         	// add the labels to the root
         	Label farmName = new Label("Please Enter Farm Name: ");
+        	Label date = new Label("Please Enter Date: ");
+        	Label weight = new Label("Please Enter Weight: ");
         	
         	root.getChildren().add(farmName);
+        	root.getChildren().add(date);
+        	root.getChildren().add(weight);
+        	date.relocate(160, 160);
         	farmName.relocate(160, 180);
+        	weight.relocate(160, 140);
         	
         	//add Text fields to the root
-        	TextField farmN = new TextField();      	
-        	root.getChildren().add(farmN);        	
+        	TextField farmN = new TextField();   
+        	TextField farmD = new TextField(); 
+        	TextField farmW = new TextField(); 
+        	root.getChildren().add(farmN);        
+        	root.getChildren().add(farmD); 
+        	root.getChildren().add(farmW); 
         	farmN.relocate(300, 180);
+        	farmD.relocate(300, 160);
+        	farmW.relocate(300, 140);
         	
         	//add buttons to the root
         	Button add = new Button("Add");
         	root.getChildren().add(add);
         	add.relocate(220, 220);
         	
-        	Button remove = new Button("Remove");
+        	Button remove = new Button("Remove Farm");
         	root.getChildren().add(remove);
         	remove.relocate(320, 220);
         	
         	Button back = new Button("Back");
         	root.getChildren().add(back);
         	back.relocate(0, 350);
+        	
+        	EventHandler<ActionEvent> addEvent = new EventHandler<ActionEvent>() { 
+                public void handle(ActionEvent e) 
+                { 
+                     try {
+                    	 if(dataStorage.contains(farmN.getText())) {
+                    		 dataStorage.get(farmN.getText()).add(Integer.parseInt(farmW.getText()), farmD.getText());
+                    	 }else {
+                    		 Farm a = new Farm();
+                    		 a.add(Integer.parseInt(farmW.getText()), farmD.getText());
+						dataStorage.insert(farmN.getText(), a);
+                    	 }
+						Label added = new Label("successfully added");
+						root.getChildren().add(added);
+						added.relocate(270, 300);
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						Label added = new Label("please enter information correctly");
+						root.getChildren().add(added);
+						added.relocate(270, 300);
+						//e1.printStackTrace();
+					}
+                } 
+            };
+            add.setOnAction(addEvent);
+            
+        	EventHandler<ActionEvent> removeEvent = new EventHandler<ActionEvent>() { 
+                public void handle(ActionEvent e) 
+                { 
+                     try {
+                    	 if(dataStorage.contains(farmN.getText())) {
+						dataStorage.remove(farmN.getText());
+						Label added = new Label(farmN.getText() + "successfully removed");
+						root.getChildren().add(added);
+						added.relocate(250, 330);
+                    	 }else {
+                    		 Label added = new Label("farm not contains");
+     						root.getChildren().add(added);
+     						added.relocate(270, 300);
+                    	 }
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+                } 
+            };
+            remove.setOnAction(removeEvent);
         	//back event
         	EventHandler<ActionEvent> startEvent = new EventHandler<ActionEvent>() { 
                 public void handle(ActionEvent e) 
@@ -1146,51 +1277,23 @@ public class Main extends Application {
                 public void handle(ActionEvent e) 
                 { 
                      try {
-             			Label title = new Label("Edit Specific Farm");
-            			title.relocate(270, 10);
-						Pane root1 = new Pane(title);
-						Label changeW = new Label("Change Weight to: ");
-						Label changeD = new Label("Change Date to: ");
-						TextField toWeight = new TextField();
-						TextField toDate = new TextField();
-						Button removeData = new Button("Remove this data");
-						Button con1 = new Button ("Continue");
-						
-						root1.getChildren().add(changeW);
-						root1.getChildren().add(changeD);
-						root1.getChildren().add(removeData);
-						root1.getChildren().add(con1);
-						root1.getChildren().add(toWeight);
-						root1.getChildren().add(toDate);
-						
-			        	changeW.relocate(175, 180);
-			        	changeD.relocate(180, 220);
-			        	toWeight.relocate(300, 180);
-			        	toDate.relocate(300, 220);
-			        	removeData.relocate(250, 265);
-			        	con1.relocate(270, 310);
-						//Back button and event
-			        	Button back = new Button("Back");
-			        	root1.getChildren().add(back);
-			        	back.relocate(0, 350);
-			        	//back event
-			        	EventHandler<ActionEvent> backEvent = new EventHandler<ActionEvent>() { 
-			                public void handle(ActionEvent e) 
-			                { 
-			                     try {
-									EditSpecificFarm(stage);
-								} catch (Exception e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
-								}
-			                } 
-			            };
-			            back.setOnAction(backEvent);
-			            //create scene
-						Scene mainScene = new Scene(root1, WINDOW_WIDTH, WINDOW_HEIGHT);
-						stage.setTitle(APP_TITLE);
-		            	stage.setScene(mainScene);
-		            	stage.show();
+                    	 Label a = new Label();
+             			if(!ID.getText().isEmpty() && !d.getText().isEmpty()) {
+             				if(dataStorage.contains("Farm "+ID.getText())) {
+             					//if(dataStorage.get(ID.getText()).containsDate(d.getText())) {
+             						editSpecificEventTable(stage, ID.getText(), d.getText());
+             					//}else {
+             						//a = new Label("date not contains");
+             					//}
+             				}else {
+             					a = new Label("farm not contains");
+             				}
+             			}else{
+             				a = new Label ("Please enter all information correctly");
+             			}
+             			root.getChildren().add(a);
+             			a.relocate(250, 140);
+             			
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -1218,6 +1321,72 @@ public class Main extends Application {
             	stage.setTitle(APP_TITLE);
             	stage.setScene(mainScene);
             	stage.show();
+	}
+	
+	public void editSpecificEventTable(Stage stage, String farmID, String date) {
+		Label title = new Label("Edit Specific Farm");
+		title.relocate(270, 10);
+		Pane root1 = new Pane(title);
+		Label changeW = new Label("Change Weight to: ");
+		//Label changeD = new Label("Change Date to: ");
+		TextField toWeight = new TextField();
+		//TextField toDate = new TextField();
+		Button removeData = new Button("Remove this data");
+		Button con1 = new Button ("Continue");
+		
+		root1.getChildren().add(changeW);
+		//root1.getChildren().add(changeD);
+		root1.getChildren().add(removeData);
+		root1.getChildren().add(con1);
+		root1.getChildren().add(toWeight);
+		//root1.getChildren().add(toDate);
+		
+    	changeW.relocate(175, 180);
+    	//changeD.relocate(180, 220);
+    	toWeight.relocate(300, 180);
+    	//toDate.relocate(300, 220);
+    	removeData.relocate(250, 265);
+    	con1.relocate(270, 310);
+		//Back button and event
+    	Button back = new Button("Back");
+    	root1.getChildren().add(back);
+    	back.relocate(0, 350);
+    	
+    	EventHandler<ActionEvent> conEvent = new EventHandler<ActionEvent>() { 
+            public void handle(ActionEvent e) 
+            { 
+                 try {
+                	 dataStorage.get("Farm " +farmID).setDateWeight(date, Integer.parseInt(toWeight.getText()));
+                	 //Integer.parseInt(toWeight.getText());
+					//EditSpecificFarm(stage);
+                	 Label a = new Label("Successfully changed ");
+                	 root1.getChildren().add(a);
+                	 a.relocate(260, 350);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+            } 
+        };
+        con1.setOnAction(conEvent);
+    	//back event
+    	EventHandler<ActionEvent> backEvent = new EventHandler<ActionEvent>() { 
+            public void handle(ActionEvent e) 
+            { 
+                 try {
+					EditSpecificFarm(stage);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+            } 
+        };
+        back.setOnAction(backEvent);
+        //create scene
+		Scene mainScene = new Scene(root1, WINDOW_WIDTH, WINDOW_HEIGHT);
+		stage.setTitle(APP_TITLE);
+    	stage.setScene(mainScene);
+    	stage.show();
 	}
 
 

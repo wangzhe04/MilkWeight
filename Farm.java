@@ -15,28 +15,30 @@ package application;
  */
 
 public class Farm {
-    private String month = null;
-    private int weight = 0;
-    private double percentage = 0;
     private String[] dateArray;
     private int [] milkWeight;
     private int index = 0;
     public int monthWeight = 12;
+    //public final int sI;
     int size;
     String farmID;
     
+    /**
+     * This is the constructor of the farm class
+     * 
+     */
     public Farm() {
     	size = 100;
     	dateArray = new String [size];
     	milkWeight = new int[size];
     }
-    //
-    public Farm(String month, int weight, double d) {
-     this.month = month;
-     this.weight = weight;
-     this.percentage = d;
-    }
-    
+
+    /**
+     * This is the method that adds the milkweight 
+     * data of certain date
+     * @param milk
+     * @param date
+     */
     public void add(int milk, String date) {
     	if(index == size ) {
     		String[] mediumD = new String[size*2];
@@ -54,6 +56,12 @@ public class Farm {
     	index++;
     }
     
+    /**
+     * This method calculates the monthWeight of the farm
+     * @param month
+     * @param year
+     * @return totalWeight - the total month weight
+     */
     public int getMonthWeight(int month, int year) {
     	int totalWeight = 0;
     	if(month < 10) {
@@ -77,7 +85,11 @@ public class Farm {
     	}
     	return totalWeight;
     }
-    
+    /**
+     * This method calculates the yearWeight of the farm
+     * @param year
+     * @return yearWeight - the year weight
+     */
     public int getYearWeight(int year) {
     	int yearWeight = 0;
     	for(int i = 0; i < index; i++) {
@@ -89,6 +101,118 @@ public class Farm {
     	}
     	return yearWeight;
     }
+    public boolean containsDate(String date) {
+    	for(int i = 0; i < index; i++) {
+    		if(dateArray[i].equals(date)) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
+    public void setDateWeight(String date, int weight) {
+    	for(int i = 0; i < index; i++) {
+    		if(dateArray[i].equals(date)) {
+    			milkWeight[i] = weight;
+    		}
+    	}
+    	
+    }
+    /**
+     * This method calculates the selectDaysWeight of the farm
+     * @param startD
+     * @param endD
+     * @return totalWeight - the total weight
+     */
+    public int getDaysWeight(String startD, String endD) {
+    	int startIndex = 0;
+    	int endIndex = 0;
+    	int totalWeight = 0;
+    	int sI = 0;
+    	int j = 0;
+    	int eI = 0;
+    	double k = 1;
+    	
+    	//String line = ""; 
+    	//line = startD;
+    	//String[] startDA = line.split("-");
+    	
+    	//System.out.println(startDA[0]);
+    	for(int i = 0; i < index; i++) {
+    		//String DA = dateArray[i];
+    		//String[] DA1 = DA.split("-");
+    		//System.out.println(dateArray[i]);
+    		if(dateArray[i].equals(startD)) {
+    			//System.out.println(1);
+    			startIndex = i;
+    		}/*else if(Integer.parseInt(startDA[0]) == Integer.parseInt(DA1[0]) &&
+    				Integer.parseInt(startDA[1]) == Integer.parseInt(DA1[1])&&Integer.parseInt(startD.substring(startD.length()-1)) +1 ==
+    				Integer.parseInt(dateArray[i].substring(dateArray[i].length()-1)))/*Integer.parseInt(startDA[0]) == Integer.parseInt(DA1[0]) &&
+    				Integer.parseInt(startDA[1]) == Integer.parseInt(DA1[1])&&
+    				Integer.parseInt(startDA[2]) > Integer.parseInt(DA1[2])*/ /*{
+    			//System.out.println(i);
+    			/*sI = i;
+    			System.out.println(sI);
+
+    		}*/
+    		if(dateArray[i].equals(endD)) {
+    			endIndex = i;
+    			//System.out.println(2);
+    		}
+    	}
+    	//System.out.println(sI);
+    	/*if(startIndex == 0 && endIndex != 0) {
+    		for(int i = sI; i <= endIndex; i++) {
+        		totalWeight += milkWeight[i];
+        	}
+    	}*/
+    	for(int i = startIndex; i <= endIndex; i++) {
+    		totalWeight += milkWeight[i];
+    	}
+    	//System.out.println(totalWeight);
+    	return totalWeight;
+    }
+    
+    /**
+     * Calculates the similarity (a number within 0 and 1) between two strings.
+     */
+    /*public static double similarity(String s1, String s2) {
+      String longer = s1, shorter = s2;
+      if (s1.length() < s2.length()) { // longer should always have greater length
+        longer = s2; shorter = s1;
+      }
+      int longerLength = longer.length();
+      if (longerLength == 0) { return 1.0; /* both strings are zero length  }
+      return (longerLength - editDistance(longer, shorter)) / (double) longerLength;
+    }
+    
+    public static int editDistance(String s1, String s2) {
+        s1 = s1.toLowerCase();
+        s2 = s2.toLowerCase();
+
+        int[] costs = new int[s2.length() + 1];
+        for (int i = 0; i <= s1.length(); i++) {
+          int lastValue = i;
+          for (int j = 0; j <= s2.length(); j++) {
+            if (i == 0)
+              costs[j] = j;
+            else {
+              if (j > 0) {
+                int newValue = costs[j - 1];
+                if (s1.charAt(i - 1) != s2.charAt(j - 1))
+                  newValue = Math.min(Math.min(newValue, lastValue),
+                      costs[j]) + 1;
+                costs[j - 1] = lastValue;
+                lastValue = newValue;
+              }
+            }
+          }
+          if (i > 0)
+            costs[s2.length()] = lastValue;
+        }
+        return costs[s2.length()];
+      }
+    */
     
     /*public int getMonthWeight(String month, int year) {
     	if(month != "Oct" && month != "Nov" && month != "Dec") {
@@ -102,24 +226,4 @@ public class Farm {
     	
     }*/
     
-    public String getMonth() {
-     return month;
-    }
-    public String setMonth() {
-     return month;
-    }
-    
-    public int getWeight() {
-     return weight;
-    }
-    public void setWeight(int weight) {
-     this.weight = weight;
-    }
-    public double getPercentage() {
-     return percentage;
-    }
-       
-    public void setWeight2(double percentage) {
-     this.percentage = percentage;
-    }
 }
