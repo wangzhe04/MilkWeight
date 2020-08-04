@@ -3,6 +3,7 @@ package application;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -99,8 +100,9 @@ public class DataStorage {
 	 * @param startD
 	 * @param endD
 	 * @return totalWeight
+	 * @throws ParseException 
 	 */
-	public int getTotalDaysWeight(String startD, String endD) {
+	public int getTotalDaysWeight(String startD, String endD) throws ParseException {
 		int totalWeight = 0;
 		for(Entry<String, Farm> entry: dataStorage.entrySet()) {
 			totalWeight += entry.getValue().getDaysWeight(startD, endD);

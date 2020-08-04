@@ -7,6 +7,14 @@
 ////////////////////////////////////////////////////////////
 package application;
 
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+
+
+
 /**
  * This class was only created for data example 
  * the actual farm class would vary
@@ -123,8 +131,9 @@ public class Farm {
      * @param startD
      * @param endD
      * @return totalWeight - the total weight
+     * @throws ParseException 
      */
-    public int getDaysWeight(String startD, String endD) {
+    public int getDaysWeight(String startD, String endD) throws ParseException {
     	int startIndex = 0;
     	int endIndex = 0;
     	int totalWeight = 0;
@@ -133,39 +142,38 @@ public class Farm {
     	int eI = 0;
     	double k = 1;
     	
-    	//String line = ""; 
-    	//line = startD;
-    	//String[] startDA = line.split("-");
+    	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			Date startD1 = format.parse(startD);
+			Date endD1 = format.parse(endD);
     	
-    	//System.out.println(startDA[0]);
+    	
     	for(int i = 0; i < index; i++) {
-    		//String DA = dateArray[i];
-    		//String[] DA1 = DA.split("-");
-    		//System.out.println(dateArray[i]);
-    		if(dateArray[i].equals(startD)) {
+				Date currentD = format.parse(dateArray[i]);
+				if(currentD.compareTo(startD1) >= 0) {
+					if(sI == 0) {
+					startIndex = i;
+					sI++;
+					}
+				}
+				
+				if(currentD.compareTo(endD1) >= 0) {
+					if(currentD.compareTo(endD1) == 0) {
+						endIndex = i;
+						break;
+					}else {
+					endIndex = i - 1;
+					break;
+					}
+				}
+
+    		/*if(dateArray[i].equals(startD)) {
     			//System.out.println(1);
     			startIndex = i;
-    		}/*else if(Integer.parseInt(startDA[0]) == Integer.parseInt(DA1[0]) &&
-    				Integer.parseInt(startDA[1]) == Integer.parseInt(DA1[1])&&Integer.parseInt(startD.substring(startD.length()-1)) +1 ==
-    				Integer.parseInt(dateArray[i].substring(dateArray[i].length()-1)))/*Integer.parseInt(startDA[0]) == Integer.parseInt(DA1[0]) &&
-    				Integer.parseInt(startDA[1]) == Integer.parseInt(DA1[1])&&
-    				Integer.parseInt(startDA[2]) > Integer.parseInt(DA1[2])*/ /*{
-    			//System.out.println(i);
-    			/*sI = i;
-    			System.out.println(sI);
-
-    		}*/
+    		}
     		if(dateArray[i].equals(endD)) {
     			endIndex = i;
-    			//System.out.println(2);
-    		}
+    		}*/
     	}
-    	//System.out.println(sI);
-    	/*if(startIndex == 0 && endIndex != 0) {
-    		for(int i = sI; i <= endIndex; i++) {
-        		totalWeight += milkWeight[i];
-        	}
-    	}*/
     	for(int i = startIndex; i <= endIndex; i++) {
     		totalWeight += milkWeight[i];
     	}

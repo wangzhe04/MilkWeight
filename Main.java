@@ -91,6 +91,8 @@ public class Main extends Application {
         	Button selectDateReport = new Button("Select Date Report");
         	Button edit = new Button("Edit");
         	Button exit = new Button("Exit");
+        	Label tip = new Label("Please Enter farmID, month, year as integers" 
+        	+"\n and Date in the form as year-month-date");
         	
         	root.getChildren().add(farmReport);
         	root.getChildren().add(monthlyReport);
@@ -98,6 +100,7 @@ public class Main extends Application {
         	root.getChildren().add(selectDateReport);
         	root.getChildren().add(edit);
         	root.getChildren().add(exit);
+        	root.getChildren().add(tip);
         	
         	farmReport.relocate(190, 160);
         	monthlyReport.relocate(320, 160);
@@ -258,7 +261,10 @@ public class Main extends Application {
 						}
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						Label noInput = new Label ("Missing File");
+						root.getChildren().add(noInput);
+						noInput.relocate(215, 300);
+						//e1.printStackTrace();
 					}
                 } 
             };
@@ -351,6 +357,43 @@ public class Main extends Application {
     			"kg, Percentage: "+
     			(double)dataStorage.get("Farm " +farmID).getMonthWeight(12, year)/dataStorage.getTotalMonthWeight(12, year)*100 + "%");
     	
+    	int max = 0;
+    	int min = Integer.MAX_VALUE;
+    	double average = 0;
+    	int totalWeight = 0;
+    	int i = 0;
+    	for(int j = 1; j<=12; j++ ) {
+    		if(dataStorage.get("Farm " + farmID ).getMonthWeight(j, year) > max) {
+    			max = dataStorage.get("Farm " + farmID ).getMonthWeight(j, year);
+    		}
+    		if(dataStorage.get("Farm " + farmID ).getMonthWeight(j, year) < min) {
+    			min = dataStorage.get("Farm " + farmID ).getMonthWeight(j, year);
+    		}
+    		totalWeight += dataStorage.get("Farm " + farmID ).getMonthWeight(j, year);
+    		if(dataStorage.get("Farm " + farmID ).getMonthWeight(j, year)!= 0)
+    		i++;
+    	}
+    	if (min == Integer.MAX_VALUE) {
+    		min = 0;
+    	}
+    	 average = totalWeight/i; 
+    	/*for(Entry<String, Farm> entry: dataStorage.dataStorage.entrySet()) {
+        	i++;
+        	if(((Entry<String, Farm>) entry).getValue().getMonthWeight(month, year) > max) {
+        		max = ((Entry<String, Farm>) entry).getValue().getMonthWeight(month, year);
+        	}
+        	if(((Entry<String, Farm>) entry).getValue().getMonthWeight(month, year) < min) {
+        		min = ((Entry<String, Farm>) entry).getValue().getMonthWeight(month, year);
+        	}
+        }*/
+    	Label maxi = new Label("Maximum month weight: " + max);
+    	Label mini = new Label("Minimum month weight: " + min);
+    	Label avg = new Label("Average month weight: " + average);
+    	
+    	root.getChildren().add(maxi);
+    	root.getChildren().add(mini);
+    	root.getChildren().add(avg);
+    	
     	root.getChildren().add(feb);
     	root.getChildren().add(jan);
     	root.getChildren().add(mar);
@@ -376,6 +419,11 @@ public class Main extends Application {
     	oct.relocate(30, 280);
     	nov.relocate(30, 310);
     	dec.relocate(30, 340);
+    	
+    	maxi.relocate(300, 40);
+    	mini.relocate(300, 60);
+    	avg.relocate(300, 80);
+    	
     	//add buttons to the root
     	Button back = new Button("Back");
     	root.getChildren().add(back);
@@ -529,6 +577,9 @@ public class Main extends Application {
         		min = ((Entry<String, Farm>) entry).getValue().getMonthWeight(month, year);
         	}
         }
+    	if (min == Integer.MAX_VALUE) {
+    		min = 0;
+    	}
         
         double average = (double)dataStorage.getTotalMonthWeight(month, year)/i;
         
@@ -706,6 +757,9 @@ public class Main extends Application {
         		min = ((Entry<String, Farm>) entry).getValue().getYearWeight(year);
         	}
         }
+    	if (min == Integer.MAX_VALUE) {
+    		min = 0;
+    	}
         double average = (double)dataStorage.getTotalYearWeight(year)/i;
         
         VBox vbox = new VBox(table);
@@ -808,7 +862,9 @@ public class Main extends Application {
                     	 dateTable(stage, ID.getText(), y.getText());
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						Label a = new Label("Invalid Date Format");
+						root.getChildren().add(a);
+						a.relocate(260, 300);
 					}
                 } 
             };
@@ -874,6 +930,9 @@ public class Main extends Application {
         		min = ((Entry<String, Farm>) entry).getValue().getDaysWeight(startD, endD);
         	}
         }
+    	if (min == Integer.MAX_VALUE) {
+    		min = 0;
+    	}
         double average = (double)dataStorage.getTotalDaysWeight(startD, endD)/i;
         
         VBox vbox = new VBox(table);
@@ -971,7 +1030,10 @@ public class Main extends Application {
                     		//dataStorage.addFile(a.getStorage());
                     		//dataStorage.addFile(dataStorage1);
                     	 }
-						edit(stage);
+                    	 Label error = new Label("Successfully added");
+ 						root.getChildren().add(error);
+ 						error.relocate(250, 250);
+						//edit(stage);
 					} catch ( NumberFormatException e1) {
 						Label error = new Label("Invalid Characters or missing information, "
 								+ "DataStorage had been restored");
@@ -982,10 +1044,10 @@ public class Main extends Application {
 						//e1.printStackTrace();
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
-						Label error = new Label("Invalid Characters");
+						Label error = new Label("Invalid Inputs");
 						root.getChildren().add(error);
 						error.relocate(250, 250);
-						e1.printStackTrace();
+						//e1.printStackTrace();
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						//e1.printStackTrace();
@@ -1051,7 +1113,7 @@ public class Main extends Application {
 	 * @param stage  the stage of the program
 	 * @throws Exception when exception occurs
 	 */
-	public void AddFile(Stage stage) throws Exception{
+	/*public void AddFile(Stage stage) throws Exception{
 		//title of the pane
 			Label title = new Label("Add File");
 			title.relocate(270, 10);		
@@ -1113,7 +1175,7 @@ public class Main extends Application {
             	stage.setTitle(APP_TITLE);
             	stage.setScene(mainScene);
             	stage.show();
-	}
+	}*/
 	
 	/*
 	 * This method is create the GUI that user chose AddRemoveFarm
@@ -1364,7 +1426,10 @@ public class Main extends Application {
                 	 a.relocate(260, 350);
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
-					e1.printStackTrace();
+               	 Label a = new Label("please enter in the form requested");
+               	 root1.getChildren().add(a);
+               	 a.relocate(260, 350);
+					//e1.printStackTrace();
 				}
             } 
         };
